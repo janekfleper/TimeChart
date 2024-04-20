@@ -126,33 +126,29 @@ export class SelectZoom {
             return;
 
         const p = this.getPoint(ev);
+        const x1 = Math.min(this.start.p.x, p.x);
+        const x2 = Math.max(this.start.p.x, p.x);
+        const y1 = Math.max(this.start.p.y, p.y);
+        const y2 = Math.min(this.start.p.y, p.y);
 
         let changed = false;
-        if (this.options.enableX) {
-            const x1 = Math.min(this.start.p.x, p.x);
-            const x2 = Math.max(this.start.p.x, p.x);
-            if (x2 - x1 > this.options.thresholdX) {
-                const newDomain = [
-                    this.chart.model.xScale.invert(x1),
-                    this.chart.model.xScale.invert(x2),
-                ];
-                this.chart.model.xScale.domain(newDomain);
-                this.chart.options.xRange = null;
-                changed = true;
-            }
+        if (this.options.enableX && (x2 - x1 > 0) && ((x2 - x1 >= y1 - y2) || (x2 - x1 > this.options.thresholdX))) {
+            const newDomain = [
+                this.chart.model.xScale.invert(x1),
+                this.chart.model.xScale.invert(x2),
+            ];
+            this.chart.model.xScale.domain(newDomain);
+            this.chart.options.xRange = null;
+            changed = true;
         }
-        if (this.options.enableY) {
-            const y1 = Math.max(this.start.p.y, p.y);
-            const y2 = Math.min(this.start.p.y, p.y);
-            if (y1 - y2 > this.options.thresholdY) {
-                const newDomain = [
-                    this.chart.model.yScale.invert(y1),
-                    this.chart.model.yScale.invert(y2),
-                ];
-                this.chart.model.yScale.domain(newDomain);
-                this.chart.options.yRange = null;
-                changed = true;
-            }
+        if (this.options.enableY && (y1 - y2 > 0) && ((y1 - y2 > x2 - x1) || (y1 - y2 > this.options.thresholdY))) {
+            const newDomain = [
+                this.chart.model.yScale.invert(y1),
+                this.chart.model.yScale.invert(y2),
+            ];
+            this.chart.model.yScale.domain(newDomain);
+            this.chart.options.yRange = null;
+            changed = true;
         }
         if (changed)
             this.chart.model.requestRedraw();
