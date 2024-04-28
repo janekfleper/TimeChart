@@ -54,6 +54,8 @@ export class SelectZoom {
     }
 
     private start: {p: Point, id: number} | null = null;
+    private selectX: boolean = false;
+    private selectY: boolean = false;
 
     private reset() {
         if (this.start === null)
@@ -105,10 +107,10 @@ export class SelectZoom {
         const h = Math.abs(this.start.p.y - p.y);
         const minW = Math.min(h, this.options.thresholdX);
         const minH = Math.min(w, this.options.thresholdY);
-        const selectX = w >= minW || !this.options.enableY;
-        const selectY = h >= minH || !this.options.enableX;
+        this.selectX = w >= minW || !this.options.enableY;
+        this.selectY = h >= minH || !this.options.enableX;
 
-        if (this.options.enableX && selectX) {
+        if (this.options.enableX && this.selectX) {
             this.visual.x.baseVal.value = x;
             this.visual.width.baseVal.value = w;
         } else {
@@ -116,7 +118,7 @@ export class SelectZoom {
             this.visual.setAttribute('width', '100%');
         }
 
-        if (this.options.enableY && selectY) {
+        if (this.options.enableY && this.selectY) {
             this.visual.y.baseVal.value = y;
             this.visual.height.baseVal.value = h;
         } else {
@@ -134,15 +136,9 @@ export class SelectZoom {
         const x2 = Math.max(this.start.p.x, p.x);
         const y1 = Math.max(this.start.p.y, p.y);
         const y2 = Math.min(this.start.p.y, p.y);
-        const w = Math.abs(x2 - x1);
-        const h = Math.abs(y2 - y1);
-        const minW = Math.min(h, this.options.thresholdX);
-        const minH = Math.min(w, this.options.thresholdY);
-        const selectX = w >= minW || !this.options.enableY;
-        const selectY = h >= minH || !this.options.enableX;
 
         let changed = false;
-        if (this.options.enableX && selectX && x2 != x1) {
+        if (this.options.enableX && this.selectX && x2 != x1) {
             const newDomain = [
                 this.chart.model.xScale.invert(x1),
                 this.chart.model.xScale.invert(x2),
@@ -151,7 +147,7 @@ export class SelectZoom {
             this.chart.options.xRange = null;
             changed = true;
         }
-        if (this.options.enableY && selectY && y2 != y1) {
+        if (this.options.enableY && this.selectY && y2 != y1) {
             const newDomain = [
                 this.chart.model.yScale.invert(y1),
                 this.chart.model.yScale.invert(y2),
