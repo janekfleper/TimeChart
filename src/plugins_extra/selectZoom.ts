@@ -103,16 +103,16 @@ export class SelectZoom {
 
         const x = Math.min(this.start.p.x, p.x);
         const y = Math.min(this.start.p.y, p.y);
-        const w = Math.abs(this.start.p.x - p.x);
-        const h = Math.abs(this.start.p.y - p.y);
-        const minW = Math.min(h, this.options.thresholdX);
-        const minH = Math.min(w, this.options.thresholdY);
-        this.selectX = w >= minW || !this.options.enableY;
-        this.selectY = h > minH || !this.options.enableX;
+        const width = Math.abs(this.start.p.x - p.x);
+        const height = Math.abs(this.start.p.y - p.y);
+        const minWidth = Math.min(height, this.options.thresholdX);
+        const minHeight = Math.min(width, this.options.thresholdY);
+        this.selectX = width >= minWidth || !this.options.enableY;
+        this.selectY = height > minHeight || !this.options.enableX;
 
         if (this.options.enableX && this.selectX) {
             this.visual.x.baseVal.value = x;
-            this.visual.width.baseVal.value = w;
+            this.visual.width.baseVal.value = width;
         } else {
             this.visual.setAttribute('x', '0');
             this.visual.setAttribute('width', '100%');
@@ -120,7 +120,7 @@ export class SelectZoom {
 
         if (this.options.enableY && this.selectY) {
             this.visual.y.baseVal.value = y;
-            this.visual.height.baseVal.value = h;
+            this.visual.height.baseVal.value = height;
         } else {
             this.visual.setAttribute('y', '0');
             this.visual.setAttribute('height', '100%');
