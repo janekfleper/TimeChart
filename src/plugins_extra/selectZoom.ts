@@ -108,7 +108,7 @@ export class SelectZoom {
         const minW = Math.min(h, this.options.thresholdX);
         const minH = Math.min(w, this.options.thresholdY);
         this.selectX = w >= minW || !this.options.enableY;
-        this.selectY = h >= minH || !this.options.enableX;
+        this.selectY = h > minH || !this.options.enableX;
 
         if (this.options.enableX && this.selectX) {
             this.visual.x.baseVal.value = x;
