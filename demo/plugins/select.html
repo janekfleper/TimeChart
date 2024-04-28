@@ -16,6 +16,12 @@
 
         <label for="y">Y</label>
         <input type="checkbox" id="y" name="y">
+
+        <label for="threshold-x">thresholdX</label>
+        <input type="number" size="4" id="threshold-x" name="thresholdX" value="20" min="0">
+
+        <label for="threshold-y">thresholdY</label>
+        <input type="number" size="4" id="threshold-y" name="thresholdY" value="20" min="0">
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
@@ -54,9 +60,11 @@
 
         const form = document.querySelector('form');
         function syncSelectZoom() {
-            const { x, y } = form;
+            const { x, y, thresholdX, thresholdY } = form;
             chart.plugins.selectZoom.options.enableX = x.checked;
             chart.plugins.selectZoom.options.enableY = y.checked;
+            chart.plugins.selectZoom.options.thresholdX = thresholdX.value;
+            chart.plugins.selectZoom.options.thresholdY = thresholdY.value;
         }
         form.addEventListener('change', syncSelectZoom);
         syncSelectZoom();
